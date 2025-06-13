@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Login Fleuria</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<!-- MATERIAL DESIGN ICONIC FONT -->
+	<link rel="stylesheet" href="fonts/material-design-iconic-font/css/material-design-iconic-font.min.css">
+
+	<!-- STYLE CSS -->
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+	<div class="wrapper" style="background-image: url('images/bg gambar login fin.png');">
+		<div class="inner">
+			<div class="image-holder">
+				<img src="images/gambar login.jpeg" alt="">
+			</div>
+			<!-- FORM LOGIN -->
+			<form id="loginForm" action="">
+				<h3>Login</h3>
+				<div class="form-group">
+					<input type="text" placeholder="Nama Depan" class="form-control" id="namaDepan" required>
+					<input type="text" placeholder="Nama Akhir" class="form-control" id="namaAkhir" required>
+				</div>
+				<div class="form-wrapper">
+					<input type="text" placeholder="Username" class="form-control" id="username" required>
+					<i class="zmdi zmdi-account"></i>
+				</div>
+				<div class="form-wrapper">
+					<input type="email" placeholder="Email" class="form-control" id="email" required>
+					<i class="zmdi zmdi-email"></i>
+				</div>
+				<div class="form-wrapper">
+					<select name="gender" id="gender" class="form-control" required>
+						<option value="" disabled selected>Jenis Kelamin</option>
+						<option value="male">Laki-laki</option>
+						<option value="female">Perempuan</option>
+					</select>
+					<i class="zmdi zmdi-caret-down" style="font-size: 17px"></i>
+				</div>
+				<div class="form-wrapper">
+					<input type="password" placeholder="Password" class="form-control" id="password" required>
+					<i class="zmdi zmdi-lock"></i>
+				</div>
+				<div class="form-wrapper">
+					<input type="password" placeholder="Konfirmasi Password" class="form-control" id="confirmPassword" required>
+					<i class="zmdi zmdi-lock"></i>
+				</div>
+				<button type="submit">Masuk
+					<i class="zmdi zmdi-arrow-right"></i>
+				</button>
+			</form>
+		</div>
+	</div>
+	
+	<script>
+		// Cek status login saat halaman dimuat
+		window.onload = function() {
+			if (localStorage.getItem('isLoggedIn') === 'true') {
+				// Jika sudah login, langsung redirect ke halaman utama
+				window.location.href = 'http://localhost/fleuria%20bouquet/';
+			}
+		};
+
+		document.getElementById('loginForm').addEventListener('submit', function(e) {
+			e.preventDefault();
+			
+			// Ambil nilai dari input
+			const namaDepan = document.getElementById('namaDepan').value.trim();
+			const namaAkhir = document.getElementById('namaAkhir').value.trim();
+			const username = document.getElementById('username').value.trim();
+			const email = document.getElementById('email').value.trim();
+			const gender = document.getElementById('gender').value;
+			const password = document.getElementById('password').value;
+			const confirmPassword = document.getElementById('confirmPassword').value;
+			
+			// Validasi form kosong
+			if (!namaDepan || !namaAkhir || !username || !email || !gender || !password || !confirmPassword) {
+				alert('Mohon lengkapi semua field!');
+				return;
+			}
+			
+			// Validasi email format
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(email)) {
+				alert('Format email tidak valid!');
+				return;
+			}
+			
+			// Validasi password minimal 6 karakter
+			if (password.length < 6) {
+				alert('Password minimal 6 karakter!');
+				return;
+			}
+			
+			// Validasi password cocok
+			if (password !== confirmPassword) {
+				alert('Password dan konfirmasi password tidak cocok!');
+				return;
+			}
+			
+			// Simpan riwayat login ke localStorage
+			let loginHistory = JSON.parse(localStorage.getItem('loginHistory')) || [];
+			loginHistory.push({ 
+				namaDepan: namaDepan,
+				namaAkhir: namaAkhir,
+				username: username,
+				email: email,
+				gender: gender,
+				waktu: new Date().toISOString() 
+			});
+			localStorage.setItem('loginHistory', JSON.stringify(loginHistory));
+			
+			// Simpan status login
+			localStorage.setItem('isLoggedIn', 'true');
+			localStorage.setItem('username', username); // opsional
+			
+			// Redirect ke halaman utama
+			window.location.href = 'http://localhost/fleuria%20bouquet/';
+		});
+	</script>
+	
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
